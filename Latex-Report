@@ -1,0 +1,286 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\input{structure}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{lscape}
+\usepackage{booktabs,threeparttable}
+\usepackage{amsmath}
+\usepackage[nohead]{geometry}
+\usepackage[singlespacing]{setspace}
+\usepackage{dblfloatfix} 
+\usepackage[bottom]{footmisc}
+\usepackage{indentfirst}
+\usepackage{endnotes}
+\usepackage{float}
+\usepackage{graphicx}%
+\usepackage{rotating}
+%\usepackage{natbib}
+%\bibliographystyle{unsrtnat}
+\setcounter{MaxMatrixCols}{30}
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+
+% CHANGE THIS TO YOU
+\author{Om Kanabar}
+\date{\today}
+
+% Headers and footers
+\pagestyle{fancy}
+\fancyhf{}
+
+
+
+% ==============================================
+%       DOCUMENT
+% ==============================================
+
+\begin{document}
+
+\textbf{Momentum Trading Strategies across Asset Classes}
+
+\textbf{Introduction}
+
+Jegadeesh and Titman (1993) present the first comprehensive study of momentum-based trading strategies and their implications for efficient markets. Subsequently, there have been numerous empirical papers both supporting and critiquing these initial findings, with the majority of papers focusing on traditional asset classes (Rouwenhorst, 1997; Menkhoff et al, 2012; Miffre and Rallis, 2007). The recent prevalence of cryptocurrency and digital assets presents an opportunity to test momentum strategies on relatively illiquid, novel markets, which is the focus of this paper. I aim to summarise the existing literature on cryptocurrency momentum trading, provide a theoretical background to these strategies, and present an empirical study of MACD trading strategies. I first calculate the past return generated through this momentum strategy and then examine historical correlations between momentum portfolio returns across asset classes, an empirical phenomenon proposed by Asness et al (2013).
+
+\textbf{Literature Review}
+
+Although research into momentum trading of cryptocurrency remains a relatively nascent area of finance, there are several papers investigating whether cryptocurrency prices can be predicted using previous returns. The main body of research concludes that Bitcoin and other cryptocurrencies are more inefficient than traditional asset classes. They also find that empirically, they cannot reject the hypothesis that past returns have no predictive power over future returns. For example, Urquhart (2016), Al-Yahaee et al (2018), and Zhang et al (2018) all find that cryptocurrencies are less efficient than gold, stocks, and currencies (using a mixture of cross-sectional and time-series momentum strategies). These results are corroborated by Wisselink (2018), who uses TSMOM and filter strategies, and finds that there is some evidence that momentum anomalies exist in cryptocurrency markets (due to significant positive excess returns). A smaller but notable part of the literature is high frequency momentum trading, which also generates significant positive excess returns (even after transaction costs), but this may come from technological and first-mover advantage (for example speed of execution) rather than long-term predictive power (Jeffrey et al, 2020; Tzouvanas and Kizys, 2019).
+
+Recently, a number of studies have emerged, claiming that positive excess returns from momentum strategies are declining as cryptocurrencies become more entrenched. The most wide-reaching study comes from Grobys and Sapkota (2019), who find that cross-sectional strategies (buying winners and selling losers) produce insignificant returns in a set of 143 cryptocurrencies between 2014 and 2018. This implies that digital currencies are more efficient than earlier studies suggest. This paper builds on work from Vidal-Tomas and Ibanez (2018) and Sensoy (2019), who both find that Bitcoin has become more efficient over time. I attempt to add to this strand of the literature by using moving average-based momentum investing strategies to investigate whether such strategies have become less profitable as Bitcoin has become more widely traded. This relates to the theoretical propositions from Wei (2018) and Brauneis and Mestel (2018), who find that return predictability diminishes as market liquidity increases. This may be due to more momentum investors entering the market, competing away potential unpriced predictive power, leading to more efficient markets. In addition, Bariviera (2017) hypothesises that Bitcoin has experienced an increase in informational efficiency, which has led to more accurate pricing of information (following the fundamental value-based investing theories), further reducing momentum returns.
+
+Finally, Asness et al (2013) explore an interesting empirical phenomenon, whereby payoffs from momentum strategies are positively correlated with otherwise unrelated asset markets. Specifically, they find that momentum returns correlate more strongly than passive exposures across asset classes. The theoretical hypothesis behind this empirical observation is that global funding liquidity risks affect all assets jointly, indicating there exists a factor model which can predict this comovement. Surprisingly, the Asness et al paper only considers traditional asset classes and according to Grobys and Sapkota (2019), a similar analysis for digital currencies has not yet been performed. Therefore, this paper provides a preliminary investigation of this underresearched area by considering the cross-correlation between momentum returns in Bitcoin, US equity markets, and the GBPUSD exchange rate.
+
+Before explaining the estimation strategy, I must first define the implications of positive correlations in momentum returns across asset classes. These correlations do not imply that the asset prices themselves are correlated but rather the profits from momentum trading on these asset prices are correlated. A logical extension of this would be to assume that greater returns from momentum trading indicate the strategy is more accurate at forecasting future price movements (and the future price process has become more predictable or visible to the algorithm). Therefore, if correlations exist across returns, this means predictability is correlated across unrelated assets. A potential reason for this joint predictability is that momentum algorithms may just mechanically generate similar profits despite different underlying price movements. Mathematically, this relates to the field of real analysis, which would class these types of momentum algorithms as pure functions with each input returning a unique output. There is also an economic reason for this cross-correlation which relates to Asness et al's theory that global funding liquidity risk leads to similar momentum returns across supposedly unrelated asset classes. This is somewhat linked to analysis by Gabaix and Koijen (2020), who propose an ‘Inelastic Markets Hypothesis’ which provides a salient link between asset classes based on fund flows. The inelastic nature of markets may be one explanation for this global funding liquidity risk as fund flows although relatively static may lead to large price movements and permanent outflows.
+
+\textbf{Estimation Strategy}
+
+In this section, I formalise the estimation strategy and the model specifications. I consider three different assets in this empirical analysis: Bitcoin, spot S\&P 500 prices, and the spot GBPUSD exchange rate (cable). I restrict the time period to between 1st April 2013 (when Bitcoin first crossed \$100) and 19th May 2021, and use the same time window for each asset. To quantify the momentum strategy, I use the standard moving average convergence divergence (MACD) technique, which is an indicator created by Appel (1978), measuring the trend momentum in an asset’s price. The MACD series is the difference between the fast (short period) exponential moving average (EMA) and slow (long period) EMA. This is then averaged again to provide a MACD signal, which is used to predict the short-term momentum of an asset’s price. I use the standard time parameters in this estimation with the difference of EMAs for the MACD series at 12 and 26 days (short and long period) and the average MACD series of 9 days. This provides a lag indicator for short-term changes in the asset's price and is particularly useful for assets with trends and semi-predictable price action. The methodology itself refers to a filtered measure of the derivative of the asset price series with respect to time. The estimate has the lag of the signal (the moving average of the MACD series itself) and an additional gain factor which is the signal filter constant. I omit an extensive mathematical derivation as it is unnecessary for the purposes of this paper.
+
+To avoid problems with p-hacking or data snooping (which are two criticisms of previous papers), I keep this momentum strategy the same across all assets (as done in Asness et al) but the MACD time parameters can be easily endogenised to each time-series process through a simple grid search or optimisation. I have also chosen to focus on a more short-term momentum indicator (compared to Asness et al) due to the lack of data on Bitcoin. Asness et al use a common momentum measure based on a 12 month cumulative return on the asset (omitting the most recent month’s return due to the one-month reversal observed in asset price trends). They can do this because they consider approximately 40 years of data, whereas I only have access to 8 years. Asness et al also compute cross-asset correlations from quarterly returns to mitigate the influence of nonsynchronous trading across markets, but I am only able to restrict this to monthly returns – again due to lack of data.
+
+Moving to the mechanics of the trades, I first consider a portfolio of \$10,000 invested into each asset at the close price on 16th May 2013. This is due to the lags introduced by the moving averages (meaning I cannot start on 1st April 2013 itself). After this first investment is deployed, I programme the trading algorithm to sell the entire invested capital when the MACD series crosses the signal line from above. I then hold this amount in cash until the MACD series crosses the signal line again from below, upon which this cash is reinvested into the asset. Therefore, I exclude the possibility of shorting the asset or buying different amounts based on the signal strength. This can again be modified to become dependent on the derivative of the price action (ie how quickly the price has changed) or the volume behind the price movement but I ignore these possibilities to maintain simplicity.
+
+Given the current time window, this provides 2052 observations of daily prices. This is because the S\&P 500 is only traded on weekdays whereas Bitcoin, which is traded OTC, has quoted prices every day. To simplify the analysis, I omit any trading days where at least one of the assets is not traded, leading to the same number of observations for each asset. I also reduce the observations of moving averages due to time lags, which provides a final tradeable information set of 2019 observations. After the trades have been specified and the portfolio value is recorded on each day, I compile the data into a monthly dataset which results in 97 observations, which will then be used to compute monthly correlations between payoffs from momentum strategies. I record the Pearson, Kendall, and Spearman correlations and also present various significance tests of the correlations. All figures are reported excluding transaction costs.
+
+\textbf{Results}
+
+The full results are shown in the Appendix of the paper. Considering Table 1, which illustrates momentum trading performance for the three assets, we can see that Bitcoin predictability generates extremely profitable outcomes for the \$10,000 portfolio. The average annual log return is 0.8822 which gives a percentage return of 141.60\% per year since 2013. This is significantly higher than the buy-and-hold return of 105.01\%. The other important result is that the momentum portfolio exhibited lower return volatility than the buy-and-hold, indicating that it has a superior Sharpe ratio and in a mean-variance optimisation setting, generates a higher risk-adjusted return. In money terms, the final portfolio value for the momentum strategy was approximately \$11.7m whereas the buy-and-hold was only worth \$3m.
+
+Comparing these results with the trading profits of the S\&P 500 and GBPUSD portfolios, it is clear that momentum trading in Bitcoin generated superior results overall. The S\&P 500 trades were still profitable with a final portfolio value of \$16,674 but this is lower than the buy-and-hold portfolio value. However, the momentum portfolio did offer a lower volatility, indicating that there are still benefits from this trade in equities. The GBPUSD momentum portfolio did not generate attractive returns and the portfolio was worth less than the starting value (and less than the buy-and-hold portfolio). This indicates that momentum trading (at least under the current specification) is unprofitable for this market. This may be due to the liquid nature of the market, given this is one of the oldest currency trading flows. Finally, considering the correlations between the BAH and momentum portfolios, Bitcoin had a high correlation with the long-only strategy (0.82), indicating that a large proportion of the trading gains may only have come from the general increase in Bitcoin price since 2013. The correlation was much lower for the S\&P 500 trades at 0.51 but still positive, implying that this strategy is not market neutral either. An interesting extension would be to allow shorting when the price signal is negative, as this may reduce the correlation with the market and allow greater momentum profits from downward moves in the underlying asset price.
+
+Moving to the question posed by Grobys and Sapkota (2019), that momentum strategies have become unprofitable as time has advanced, Figure 1 in the Appendix shows that monthly log returns of the Bitcoin momentum portfolio have remained broadly constant between 2013 and 2020. I fit a non-parametric Lowess trend line to the scatterplot, which shows that momentum was more profitable during the very early days with a downward trend until mid-2015, after which returns actually increased to a peak. Since then, there is a slight downward trend and stabilisation with broadly constant returns since 2019. Although these are very preliminary results (without any risk adjustments or controls for other variables), it seems that MACD strategies in Bitcoin continue to generate positive returns in expectation (before transaction costs). A more rigorous way to test this would be to regress log returns on time, controls for volatility, and trading volumes to provide a comprehensive answer.
+
+Finally, moving to Tables 4, 5, and 6, these results provide an extension to Asness et al's cross-correlation analysis (by applying these methods to digital assets). All three variants of correlation produce broadly similar results in terms of magnitude (with significance rising for the Spearman correlations). The correlation between momentum returns in Bitcoin and the S\&P 500 index is estimated to be 0.086 and the correlation between Bitcoin and cable is estimated to be -0.0078. Both of these values are insignificant from zero, providing preliminary evidence that the empirical phenomenon observed of common returns to momentum investing does not extend to digital assets (since most cryptocurrencies are strongly correlated with Bitcoin). The significance of the correlations does however increase when we change the method of calculation, with the Spearman correlation showing that Bitcoin and the S\&P 500 are correlated at 0.16 (with almost marginal significance at 11\%). Interestingly, the correlation between absolute portfolio values was much higher and statistically significant for the Bitcoin and the S\&P 500 portfolios, indicating that comparing returns and absolute payoffs may generate differing answers.
+
+\textbf{Conclusion}
+
+To conclude, this paper provides a superficial analysis of MACD trading strategies and compares the returns to such strategies across three assets. The results showed that there is strong potential for outsized trading gains when using this strategy in Bitcoin and moderate gains for the S\&P 500 (with negative gains for the currency trades). Given this is an empirical paper, the theoretical reasons for this are not explored, but there are various explanations in the literature which include access to liquidity, efficient information pricing, and structural regulations that encourage momentum investing. However, despite these results, given time and resource constraints, this paper is merely a starting point and does not represent a comprehensive analysis of the issue. In particular, there remain validity concerns given the lack of controls, risk adjustment, and omission of trading days (which may have introduced bias into the estimates). The results also suggest that the cross-correlation in momentum returns observed in traditional asset classes does not extend to Bitcoin. This may be due to model specification and therefore, a complete answer would require a comparison of momentum strategies with varying functional forms.
+
+Word count: 2495
+\pagebreak
+
+\vspace{1cm}
+\textbf{Appendix}
+
+
+
+\begin{table}[h]
+    \label{table1}
+    \caption{Summary of Momentum Performance} % title of Table
+    \centering % used for centering table
+    \begin{tabular}{l c c c} % centered columns (4 columns)
+    \toprule \toprule
+    Asset & Annualised Log Return & Annualised Log Return Volatility & Portfolio Final Value\\ [0.5ex] % inserts table
+    %heading
+    \midrule % inserts single horizontal line
+    Bitcoin & 0.8822 & 0.5766 & 11,743,310 \\ % inserting body of the table
+    S\&P 500 & 0.06381 & 0.09119 & 16,674 \\
+    GBPUSD & -0.02093 & 0.06826 & 8,456 \\ [1ex]
+    \bottomrule %inserts single line
+    \end{tabular}
+    \label{table:summary} % is used to refer this table in the text
+\end{table}
+
+\vspace{20pt}
+
+\begin{table}[h]
+    \label{table2}
+    \caption{Summary of Buy-and-Hold Performance} % title of Table
+    \centering % used for centering table
+    \begin{tabular}{l c c c} % centered columns (4 columns)
+    \toprule \toprule
+    Asset  & Annualised Log Return & Annualised Log Return Volatility & Portfolio Final Value \\ [0.5ex] % inserts table
+    %heading
+    \midrule % inserts single horizontal line
+    Bitcoin & 0.7179 & 1.043 & 3,146,827 \\ % inserting body of the table
+    S\&P 500 & 0.1153 & 0.1730 & 25,180 \\
+    GBPUSD & -0.009498 & 0.09336 & 9,267 \\ [1ex]
+    \bottomrule %inserts single line
+    \end{tabular}
+    \label{table:summary} % is used to refer this table in the text
+\end{table}
+
+\vspace{20pt}
+
+\begin{table}[h]
+    \label{table3}
+    \caption{Summary of Strategy Correlations} % title of Table
+    \centering % used for centering table
+    \begin{tabular}{l c c c} % centered columns (4 columns)
+    \toprule \toprule
+    Asset  & Correlation between BAH and Momentum \\ [0.5ex] % inserts table
+    %heading
+    \midrule % inserts single horizontal line
+    Bitcoin & 0.8236 \\ % inserting body of the table
+    S\&P 500 & 0.5103 \\
+    GBPUSD & 0.7456 \\ [1ex]
+    \bottomrule %inserts single line
+    \end{tabular}
+    \label{table:summary} % is used to refer this table in the text
+\end{table}
+
+\vspace{20pt}
+
+\begin{figure}[H]
+    \centering
+    \caption{Bitcoin Momentum Portfolio Monthly Log Returns}
+    \includegraphics[scale=0.6]{Plot1.png}
+    \label{Figure:1}
+ \end{figure}
+
+
+
+
+
+
+\begin{table}
+ \centering
+ \renewcommand*\TPTnoteLabel[1]{\parbox[b]{3em}{\hfill#1\,}}
+ \begin{threeparttable}
+  \caption{Pearson Correlations}
+  \begin{tabular}{lccc}\toprule
+                 & {Bitcoin}        & {S\&P500}        &{GBPUSD} \\\midrule
+   Bitcoin      &    1            &  0.08636         &  -0.007782  \\
+                 &               & (0.40)        &     (0.94)         \\
+   S\&P500 &              &  1 & 0.09359            \\ 
+                           &   & & (0.36)                  \\
+   GBPUSD &   &       & 1                 \\
+     \bottomrule
+  \end{tabular}
+ \footnotesize
+  \begin{tablenotes}
+   \item[Notes:] P-values provided in parentheses
+  \end{tablenotes}
+ \end{threeparttable}
+\end{table}
+
+\begin{table}
+ \centering
+ \renewcommand*\TPTnoteLabel[1]{\parbox[b]{3em}{\hfill#1\,}}
+ \begin{threeparttable}
+  \caption{Kendall Correlations}
+  \begin{tabular}{lccc}\toprule
+                 & {Bitcoin}        & {S\&P 500}        &{GBPUSD} \\\midrule
+   Bitcoin      &    1            &  0.1072         &  -0.04205  \\
+                 &               & (0.12)        &     (0.54)         \\
+   S\&P 500 &              &  1 & 0.08808            \\ 
+                           &   & & (0.20)                  \\
+   GBPUSD &   &       & 1                 \\
+     \bottomrule
+  \end{tabular}
+ \footnotesize
+  \begin{tablenotes}
+   \item[Notes:] P-values provided in parentheses
+  \end{tablenotes}
+ \end{threeparttable}
+\end{table}
+
+\begin{table}
+ \centering
+ \renewcommand*\TPTnoteLabel[1]{\parbox[b]{3em}{\hfill#1\,}}
+ \begin{threeparttable}
+  \caption{Spearman Correlations}
+  \begin{tabular}{lccc}\toprule
+                 & {Bitcoin}        & {S\&P 500}        &{GBPUSD} \\\midrule
+   Bitcoin      &    1            &  0.1639         &  -0.05984  \\
+                 &               & (0.11)        &     (0.56)         \\
+   S\&P 500 &              &  1 & 0.1234            \\ 
+                           &   & & (0.23)                  \\
+   GBPUSD &   &       & 1                 \\
+     \bottomrule
+  \end{tabular}
+ \footnotesize
+  \begin{tablenotes}
+   \item[Notes:] P-values provided in parentheses
+  \end{tablenotes}
+ \end{threeparttable}
+\end{table}
+
+
+
+
+\pagebreak
+
+\normalsize %brings font size back to normal
+\vspace{20pt}
+\vspace{1cm}
+\textbf{Bibliography}
+\small
+
+Al-Yahyaee K., Mensi, W. and Yoon S. (2018). Efficiency, multifractality, and the long-memory property of the Bitcoin market: A comparative analysis with stock, currency, and gold markets. Finance Res. Lett., 27, pp. 228-234 [online]. Available at: https://doi.org/10.1016/j.frl.2018 .03.017 [Accessed 23 May 2021].
+
+Asness, C., Moskowitz, T. and Pedersen, L. (2013). Value and Momentum Everywhere. The Journal of Finance, 68: 929-985 [online]. Available at: https://doi.org/10.1111/jofi.12021 [Accessed 23 May 2021].
+
+Bariviera, A. (2017). The inefficiency of Bitcoin revisited: A dynamic approach. Economics Letters, Vol. 161, 1-4 [online]. Available at: https://doi.org/10.1016/j.econlet.2017.09.013 [Accessed 23 May 2021].
+
+Bhattacharya, D., Li, W. and Sonaer, G. (2017). Has momentum lost its momentum?. Rev Quant Finan Acc 48, 191–218 [online]. Available at: https://doi.org/10.1007/s11156-015-0547-8 [Accessed 23 May 2021].
+
+Brauneis, A. and Mestel, R. (2018). Price discovery of cryptocurrencies: Bitcoin and beyond. Economics Letters, vol. 165, issue C, 58-61 [online]. Available at: https://doi.10.1016/j.econlet .2018.02.001 [Accessed 23 May 2021].
+
+Chu, J., Chan, S. and Zhang, Y, (2020). High frequency momentum trading with cryptocurrencies. Research in International Business and Finance, Elsevier, vol. 52(C) [online]. Available at: https://ideas.repec.org/a/gam/jjrfmx/v13y2020i10p227-d419978.html [Accessed 23 May 2021].
+
+Grobys, K. and Sapkota, N. (2019). Cryptocurrencies and Momentum. Economics Letters, Vol. 180, 6-10 [online]. Available at: https://doi.org/10.1016/j.econlet.2019.03.028 [Accessed 23 May 2021].
+
+Jegadeesh, N. and Titman, S. (1993). Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency. The Journal of Finance, 48(1), 65-91 [online]. Available at: https://www.jstor. org/stable/2328882 [Accessed 23 May 2021].
+
+Menkhoff, L., Sarno, L., Schmeling, M. and Schrimpf, A. (2012). Carry Trades and Global Foreign Exchange Volatility. The Journal of Finance, 67: 681-718 [online]. Available at: https://doi.org/10.1111/ j.1540-6261.2 012.01728.x [Accessed 23 May 2021].
+
+Miffre, J. and Rallis, G. (2006). Momentum Strategies in Commodity Futures Markets. Journal of Banking and Finance, Vol. 31, No. 9 [online]. Available at http://dx.doi.org/10.2139/ssrn. 702281 [Accessed 23 May 2021].
+
+Rouwenhorst, K. (1997). International Momentum Strategies. Yale ICF Working Paper [online]. Available at https://ssrn.com/abstract=4407 [Accessed 23 May 2021].
+
+Sensoy, A. (2019). The inefficiency of Bitcoin revisited: A high-frequency analysis with alternative currencies. Finance Research Letters, Vol. 28, 68-73 [online]. Available at: https://doi.org/10.1016/j.frl.201 8.04.002 [Accessed 23 May 2021].
+
+Tzouvanas, P., Kizys, R. and Tsend-Ayush, B. (2020). Momentum trading in cryptocurrencies: Short-term returns and diversification benefits. Economics Letters, Vol. 191 [online]. Available at: https://doi .org/10.1016/j.econlet.2019.108728 [Accessed 23 May 2021].
+
+Urquhart, A. (2016). The Inefficiency of Bitcoin. [online]. Available at http://dx.doi.org/10.2139/ssrn .2828745 [Accessed 23 May 2021].
+
+Vidal-Tomás, D. and Ibañez, A. (2018). Semi-strong efficiency of Bitcoin. Finance Research Letters, Elsevier, vol. 27(C), pages 259-265 [online]. Available at: https://doi.org/10.1016/j.frl. 2018.03.013 [Accessed 23 May 2021].
+
+Wisselink, N (2018). Time-series Momentum in the Cryptocurrency Market. [online]. Available at: https://thesis.eur.nl/pub/44390/Wisselink-NJ-483391-BA-thesis.pdf [Accessed 23 May 2021].
+
+Zhang, W., Wang, O., Li, X. and Shen, D. (2018). Some stylized facts of the cryptocurrency market. Applied Economics 50(50):1-16 [online]. Available at: https://doi.10.1080/00036846.20 18.1488076 [Accessed 23 May 2021]
+
+\end{document}
